@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../assets/login.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-// import useAuth from "./Auth";
+import { useAuth } from "../context/authContetxt";
 // import * as EmailValidator from "email-validator";
 // import * as Yup from "yup";
 
@@ -15,8 +15,8 @@ import { useNavigate } from "react-router-dom";
 // });
 
 export default function Login() {
-  // const navigate = useNavigate();
-  // const { login } = useAuth();
+  const { loggedIn, setLoggedIn } = useAuth();
+  // console.log(loggedIn);
   let navigate = useNavigate();
 
   const formik = useFormik({
@@ -29,18 +29,19 @@ export default function Login() {
       //   navigate("/home");
       // });
       // alert(JSON.stringify(values, null, 2));
+
       let emailStored = localStorage.getItem("email");
       let passwordStored = localStorage.getItem("password");
 
       if (values.email === emailStored && values.password === passwordStored) {
-        console.log("logginghin");
-        navigate("/home");
-      } else {
-        navigate("/signup");
+        setLoggedIn(true);
+        localStorage.setItem("loggedIn", JSON.stringify(true));
       }
     },
   });
-
+  if (loggedIn === true) {
+    return <Navigate to="/home" replace={true}></Navigate>;
+  }
   return (
     <>
       <div className="Container p-2">

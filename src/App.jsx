@@ -1,14 +1,16 @@
-import { useState } from "react";
-import Login from "./components/login";
+import { AuthProvider } from "./context/authContetxt";
 import { BrowserRouter } from "react-router-dom";
 import Allroutes from "./routes/Routes";
-import Navigation from "./components/navigation";
 import "./App.css";
 
+let logged = localStorage.getItem("loggedIn");
+// console.log(logged);
 function App() {
   return (
     <BrowserRouter>
-      <Allroutes />
+      <AuthProvider logged={logged}>
+        <Allroutes />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

@@ -2,7 +2,10 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { useAuth } from "../context/authContetxt";
 export default function () {
+  const { loggedIn, setLoggedIn } = useAuth();
+
   let navigate = useNavigate();
   return (
     <>
@@ -15,6 +18,8 @@ export default function () {
                 <Button
                   className=" btn btn-primary"
                   onClick={() => {
+                    localStorage.removeItem("loggedIn");
+                    setLoggedIn(false);
                     navigate("/");
                   }}
                 >

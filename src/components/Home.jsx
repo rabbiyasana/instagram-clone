@@ -6,10 +6,14 @@ import { FaCheckSquare } from "react-icons/fa";
 import { useState } from "react";
 import Webcam from "react-webcam";
 import { v4 } from "uuid";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/authContetxt";
 export default function () {
   // setting states
-  let [editCap, setEditCap] = useState({ isEdit: false });
+  let [isEdit, setIsEdit] = useState(false);
   let [posts, setPosts] = useState([]);
+  const { loggedIn, setLoggedIn } = useAuth();
+
   const cap = React.useRef();
   const post_img = React.useRef();
   function createPost() {
@@ -41,8 +45,14 @@ export default function () {
       return oldPosts.filter((post) => post.postId !== id);
     });
   };
-  const editPost = () => {
-    setEditCap = { isEdit: true };
+  const editPost = (id, newCaption) => {
+    const updatedCaptionPost = posts.map((post) => {
+      if (post.postId === id) {
+        post.caption = newCaption;
+      }
+      return post;
+    });
+    setPosts(updatedCaptionPost);
   };
 
   // const { authed, logout } = useAuth();
@@ -52,6 +62,25 @@ export default function () {
   //   logout();
   //   navigate("/");
   // };
+
+  // web cam feature
+  const WebcamComponent = () => <Webcam />;
+  const videoConstraints = {
+    width: 50,
+    height: 50,
+    facingMode: "user",
+  };
+
+  const [picture, setPicture] = useState("");
+  const webcamRef = React.useRef(null);
+  const capture = React.useCallback(() => {
+    const pictureSrc = webcamRef.current.getScreenshot();
+    setPicture(pictureSrc);
+  });
+
+  if (loggedIn === false) {
+    return <Navigate to="/" replace={true}></Navigate>;
+  }
   return (
     <>
       <div className="container text-left">
@@ -77,24 +106,43 @@ export default function () {
                 />
               </div>
               <div className="form-group">
-                {/* <Webcam
-                  width={100}
-                  audio={false}
-                  height={720}
-                  screenshotFormat="image.jpeg"
-                  // width={1280}
-                  // videoConstraints={videoConstraints}
-                >
-                  {({ getScreenshot }) => (
-                    <button
-                      onClick={() => {
-                        const imageSrc = getScreenshot();
-                      }}
-                    >
-                      Capture photo
-                    </button>
-                  )}
-                </Webcam> */}
+                {/* web cam */}
+
+                {/* {picture == "" ? (
+                  <Webcam
+                    audio={false}
+                    height={400}
+                    ref={webcamRef}
+                    width={400}
+                    screenshotFormat="image/jpeg"
+                    videoConstraints={videoConstraints}
+                  />
+                ) : (
+                  <img src={picture} />
+                )} */}
+              </div>
+              <div>
+                {picture != "" ? (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPicture();
+                    }}
+                    className="btn btn-primary"
+                  >
+                    Retake
+                  </button>
+                ) : (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      capture();
+                    }}
+                    className="btn btn-danger"
+                  >
+                    Capture
+                  </button>
+                )}
               </div>
               <div className="form-group border">
                 <button className="btn btn-c btn-lng" onClick={createPost}>
@@ -121,17 +169,13 @@ export default function () {
               {posts.map((post) => {
                 return (
                   <>
-                    {!editCap.isEdit ? (
-                      <Card
-                        handleEdit={() => editPost()}
-                        handleDelete={() => deletePost(post.postId)}
-                        postId={post.postId}
-                        caption={post.caption}
-                        url={post.src}
-                      />
-                    ) : (
-                      <EditCard />
-                    )}
+                    <Card
+                      handleEdit={editPost}
+                      handleDelete={() => deletePost(post.postId)}
+                      postId={post.postId}
+                      caption={post.caption}
+                      url={post.src}
+                    />
                   </>
                 );
               })}

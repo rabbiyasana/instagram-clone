@@ -1,37 +1,40 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import React from "react";
 import { useFormik } from "formik";
+import { useAuth } from "../context/authContetxt";
+
 import * as Yup from "yup";
 
-// const SignupSchema = Yup.object().shape({
-//   fullname: Yup.string()
-//     .min(2, "Too Short!")
-//     .max(50, "Too Long!")
-//     .required("Required"),
-//   username: Yup.string()
-//     .min(2, "Too Short!")
-//     .max(50, "Too Long!")
-//     .required("Required"),
-//   email: Yup.string().email("Invalid email").required("Required"),
-//   password: Yup.string()
-//     .min(8, "Password must be 8 characters long")
-//     .matches(/[0-9]/, "Password requires a number")
-//     .matches(/[a-z]/, "Password requires a lowercase letter")
-//     .matches(/[A-Z]/, "Password requires an uppercase letter")
-//     .matches(/[^\w]/, "Password requires a symbol")
-//     .required("Required"),
-// });
+const schema = Yup.object().shape({
+  fullname: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+  username: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+  email: Yup.string().email("Invalid email").required("Required"),
+  password: Yup.string()
+    .min(8, "Password must be 8 characters long")
+    .matches(/[0-9]/, "Password requires a number")
+    .matches(/[a-z]/, "Password requires a lowercase letter")
+    .matches(/[A-Z]/, "Password requires an uppercase letter")
+    .matches(/[^\w]/, "Password requires a symbol")
+    .required("Required"),
+});
 
 export default function Signup() {
-  const formik = useFormik({
+  const { loggedIn, setLoggedIn } = useAuth();
+  const { errors, handleChange, handleSubmit, touched, values } = useFormik({
     initialValues: {
       fullname: "",
       username: "",
       password: "",
       email: "",
     },
-    // validationSchema: SignupSchema,
+    validationSchema: schema,
     onSubmit: (values) => {
       // alert(JSON.stringify(values, null, 2));
       localStorage.setItem("fullname", values.fullname);
@@ -43,7 +46,9 @@ export default function Signup() {
       console.log(values);
     },
   });
-
+  if (loggedIn === true) {
+    return <Navigate to="/home" replace={true}></Navigate>;
+  }
   return (
     <div className="Container p-2">
       <div className="row m-5">
@@ -53,7 +58,7 @@ export default function Signup() {
             <p>Sign up to see photos and videos from your friends.</p>
 
             {/* {({ errors, touched }) => ( */}
-            <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <div className="mb-3 mt-4">
                 <input
                   id="fullname"
@@ -61,12 +66,12 @@ export default function Signup() {
                   type="text"
                   className="form-control"
                   placeholder="Full Name"
-                  value={formik.values.fu}
-                  onChange={formik.handleChange}
+                  value={values.fufullname}
+                  onChange={handleChange}
                 />
-                {/* {errors.fullname && touched.fullname ? (
-                    <div>{errors.fullName}</div>
-                  ) : null} */}
+                {errors.fullname && touched.fullname ? (
+                  <div>{errors.fullName}</div>
+                ) : null}
               </div>
               <div className="mb-3 mt-4">
                 <input
@@ -75,12 +80,12 @@ export default function Signup() {
                   type="email"
                   className="form-control"
                   placeholder="Email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
+                  value={values.email}
+                  onChange={handleChange}
                 />
-                {/* {errors.fullname && touched.fullname ? (
-                    <div>{errors.fullName}</div>
-                  ) : null} */}
+                {errors.fullname && touched.fullname ? (
+                  <div>{errors.fullName}</div>
+                ) : null}
               </div>
               <div className="mb-3 mt-4">
                 <input
@@ -89,12 +94,12 @@ export default function Signup() {
                   type="text"
                   className="form-control"
                   placeholder="Username"
-                  value={formik.values.username}
-                  onChange={formik.handleChange}
+                  value={values.username}
+                  onChange={handleChange}
                 />
-                {/* {errors.username && touched.username ? (
-                    <div>{errors.username}</div>
-                  ) : null} */}
+                {errors.username && touched.username ? (
+                  <div>{errors.username}</div>
+                ) : null}
               </div>
               <div className="mb-3">
                 <input
@@ -103,12 +108,12 @@ export default function Signup() {
                   type="password"
                   className="form-control"
                   placeholder="Enter your password"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
+                  value={values.password}
+                  onChange={handleChange}
                 />
-                {/* {errors.password && touched.password ? (
-                    <div>{errors.password}</div>
-                  ) : null} */}
+                {errors.password && touched.password ? (
+                  <div>{errors.password}</div>
+                ) : null}
               </div>
               <div className="d-grid">
                 <button
@@ -124,7 +129,7 @@ export default function Signup() {
           </div>
           <div className=" border px-5 py-2 my-2">
             <p>
-              Already have an account? <Link to="/">login</Link>
+              Already have an account? <Link to="/">SignUp</Link>
             </p>
           </div>
         </div>
