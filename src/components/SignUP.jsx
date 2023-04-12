@@ -121,7 +121,7 @@ export default function Signup() {
                   className="form-control"
                   style={{ backgroundColor: "#4CB5F9", color: "#fff" }}
                 >
-                  login
+                  SignIn
                 </button>
               </div>
             </form>
