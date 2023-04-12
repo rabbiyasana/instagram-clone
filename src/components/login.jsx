@@ -1,110 +1,108 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../assets/login.png";
 import { Link } from "react-router-dom";
-import { Formik } from "formik";
-import * as EmailValidator from "email-validator";
-import * as Yup from "yup";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+// import useAuth from "./Auth";
+// import * as EmailValidator from "email-validator";
+// import * as Yup from "yup";
+
+// const schema = Yup.object().shape({
+//   email: Yup.string()
+//     .required("Email is a required field")
+//     .email("Invalid email format"),
+//   password: Yup.string().required("Password is a required field"),
+// });
 
 export default function Login() {
+  // const navigate = useNavigate();
+  // const { login } = useAuth();
+  let navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit: (values) => {
+      // login().then(() => {
+      //   navigate("/home");
+      // });
+      // alert(JSON.stringify(values, null, 2));
+      let emailStored = localStorage.getItem("email");
+      let passwordStored = localStorage.getItem("password");
+
+      if (values.email === emailStored && values.password === passwordStored) {
+        console.log("logginghin");
+        navigate("/home");
+      } else {
+        navigate("/signup");
+      }
+    },
+  });
+
   return (
-    <Formik
-      initialValues={{ email: "", password: "" }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          console.log("Logging in", values);
-          setSubmitting(false);
-        }, 500);
-      }}
-      validationSchema={Yup.object().shape({
-        email: Yup.string().email().required("Required"),
-        password: Yup.string()
-          .required("No password provided.")
-          .min(8, "Password is too short - should be 8 chars minimum.")
-          .matches(/(?=.*[0-9])/, "Password must contain a number."),
-      })}
-    >
-      {(props) => {
-        const {
-          values,
-          touched,
-          errors,
-          isSubmitting,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-        } = props;
-        return (
-          <>
-            <div className="Container p-2">
-              <div className="row m-5">
-                <div className="offset-lg-2 col-lg-4 col-sm-12">
-                  <img src={logo} alt="" width={250} />
+    <>
+      <div className="Container p-2">
+        <div className="row m-5">
+          <div className="offset-lg-2 col-lg-4 col-sm-12">
+            <img src={logo} alt="" width={250} />
+          </div>
+          <div className="col-lg-4 col-sm-12 ">
+            <div className="border p-5">
+              <form onSubmit={formik.handleSubmit}>
+                <h2>Instagram Clone</h2>
+                <div className="mb-3 mt-4">
+                  <input
+                    id="email"
+                    name="email"
+                    type="text"
+                    placeholder="Enter your email"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                  />
+                  {/* <p className="error">
+                        {errors.email && touched.email && errors.email}
+                      </p> */}
                 </div>
-                <div className="col-lg-4 col-sm-12 ">
-                  <div className="border p-5">
-                    <h2>Instagram Clone</h2>
-                    <div className="mb-3 mt-4">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter your email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={errors.email && touched.email && "error"}
-                      />
-                      {errors.email && touched.email && (
-                        <div className="input-feedback">{errors.email}</div>
-                      )}
-                    </div>
-                    <div className="mb-3">
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        class="form-control"
-                        placeholder="Enter your password"
-                        value={values.password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                          errors.password && touched.password && "error"
-                        }
-                      />
-                      {errors.password && touched.password && (
-                        <div className="input-feedback">{errors.password}</div>
-                      )}
-                    </div>
-                    <div className="d-grid">
-                      <button
-                        type="submit"
-                        class="form-control"
-                        disabled={isSubmitting}
-                        style={{ backgroundColor: "#4CB5F9", color: "#fff" }}
-                      >
-                        login
-                      </button>
-                      <div className="text-center mt-2">
-                        <p>OR</p>
-                        <p style={{ color: "#385185" }}>
-                          <b>Log in with Facebook</b>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className=" border px-5 py-2 my-2">
-                    <p>
-                      Don't have an account? <Link to="/signup">signUp</Link>
+                <div className="mb-3">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                  />
+                  {/* <p className="error">
+                        {errors.password && touched.password && errors.password}
+                      </p> */}
+                </div>
+                <div className="d-grid">
+                  <button
+                    type="submit"
+                    className="form-control"
+                    style={{ backgroundColor: "#4CB5F9", color: "#fff" }}
+                  >
+                    login
+                  </button>
+                  <div className="text-center mt-2">
+                    <p>OR</p>
+                    <p style={{ color: "#385185" }}>
+                      <b>Log in with Facebook</b>
                     </p>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
-          </>
-        );
-      }}
-    </Formik>
+            <div className=" border px-5 py-2 my-2">
+              <p>
+                Don't have an account? <Link to="/signup">signUp</Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
