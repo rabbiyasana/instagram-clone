@@ -4,7 +4,6 @@ import Navigation from "./navigation";
 import Card from "./card";
 import { FaCheckSquare } from "react-icons/fa";
 import { useState } from "react";
-import Webcam from "react-webcam";
 import { v4 } from "uuid";
 export default function () {
   // setting states
@@ -76,26 +75,7 @@ export default function () {
                   className="form-control"
                 />
               </div>
-              <div className="form-group">
-                {/* <Webcam
-                  width={100}
-                  audio={false}
-                  height={720}
-                  screenshotFormat="image.jpeg"
-                  // width={1280}
-                  // videoConstraints={videoConstraints}
-                >
-                  {({ getScreenshot }) => (
-                    <button
-                      onClick={() => {
-                        const imageSrc = getScreenshot();
-                      }}
-                    >
-                      Capture photo
-                    </button>
-                  )}
-                </Webcam> */}
-              </div>
+              <div className="form-group"></div>
               <div className="form-group border">
                 <button className="btn btn-c btn-lng" onClick={createPost}>
                   <FaCheckSquare /> post
