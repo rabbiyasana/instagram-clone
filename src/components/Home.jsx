@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Navigation from "./navigation";
 import Card from "./card";
 import { FaCheckSquare } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import Webcam from "react-webcam";
 import { v4 } from "uuid";
 import { Navigate } from "react-router-dom";
@@ -18,6 +18,7 @@ export default function () {
 
   const cap = React.useRef();
   const post_img = React.useRef();
+  const post_type = React.useRef();
   function createPost() {
     // creating file reader
     const file = post_img.current.files[0];
@@ -31,6 +32,7 @@ export default function () {
         postId: v4(),
         caption,
         src: url,
+        post_type,
       };
       // Adding new post
       const postArray = [...posts];
@@ -41,12 +43,14 @@ export default function () {
       cap.current.focus();
     });
   }
-
+  // delete post function
   const deletePost = (id) => {
     setPosts((oldPosts) => {
       return oldPosts.filter((post) => post.postId !== id);
     });
   };
+
+  // edit post function
   const editPost = (id, newCaption) => {
     const updatedCaptionPost = posts.map((post) => {
       if (post.postId === id) {
@@ -57,24 +61,25 @@ export default function () {
     setPosts(updatedCaptionPost);
   };
 
-  // web cam feature
-  const WebcamComponent = () => <Webcam />;
-  const videoConstraints = {
-    width: 50,
-    height: 50,
-    facingMode: "user",
-  };
-
-  const [picture, setPicture] = useState("");
-  const webcamRef = React.useRef(null);
-  const capture = React.useCallback(() => {
-    const pictureSrc = webcamRef.current.getScreenshot();
-    setPicture(pictureSrc);
-  });
-
   if (loggedIn === false) {
     return <Navigate to="/" replace={true}></Navigate>;
   }
+
+  // camera state , video constraints , call back
+  const [img, setImg] = useState(null);
+  const webcamRef = useRef(null);
+
+  const videoConstraints = {
+    width: { min: 150 },
+    height: { min: 120 },
+    facingMode: "user",
+  };
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setImg(imageSrc);
+    console.log(img);
+  }, [webcamRef]);
+
   return (
     <>
       <div className="container text-left">
@@ -100,13 +105,57 @@ export default function () {
                 />
               </div>
               <div className="form-group">
-                <span>Capture</span>{" "}
-                <button className="btn ">
+                {/* <span>Capture</span>{" "} */}
+                <button
+                  className="btn "
+                  onClick={() => {
+                    // <Cam />;
+                  }}
+                >
                   {" "}
                   <FaCamera />
                 </button>
-              </div>
 
+                {/* camera component */}
+                {/* <div className="form-group">
+                  <Webcam
+                    className="my-2"
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                    width={180}
+                    height={120}
+                    videoConstraints={videoConstraints}
+                  />
+                  <button onClick={capture}>Capture photo</button>
+                  <img src={img} alt="screenshot" />
+                  <button onClick={() => setImg(null)}>Retake</button>
+                </div> */}
+              </div>
+              <div class="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="public"
+                  id="public"
+                  // ref={post_type}
+                />
+                <label class="form-check-label" for="flexRadioDefault1">
+                  Public
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="private"
+                  id="private"
+                  // ref={post_type}
+                  checked
+                />
+                <label class="form-check-label" for="flexRadioDefault2">
+                  Private
+                </label>
+              </div>
               <div className="form-group border">
                 <button className="btn btn-c btn-lng" onClick={createPost}>
                   <FaCheckSquare /> post
@@ -130,6 +179,7 @@ export default function () {
                       postId={post.postId}
                       caption={post.caption}
                       url={post.src}
+                      // post_type={post.post_type}
                     />
                   </>
                 );

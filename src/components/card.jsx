@@ -40,9 +40,11 @@ export default function (props) {
             <h6 className="card-text">{props.caption}</h6>
           )}
         </div>
+
         <div className="card-footer">
           <div className="row">
             <div className="col-3">
+              <span>This is a {props.post_type}</span>
               <button
                 className="btn btn-c btn-lng"
                 onClick={() => {
