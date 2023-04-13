@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.7",
     "bootstrap": "^5.2.3",
     "email-validator": "^2.0.4",
     "formik": "^2.2.9",
@@ -17,6 +18,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.10.0",
+    "react-toastify": "^9.1.2",
     "react-webcam": "^7.0.1",
     "uuid": "^9.0.0",
     "yup": "^1.0.2"

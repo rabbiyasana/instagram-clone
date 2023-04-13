@@ -8,6 +8,8 @@ import Webcam from "react-webcam";
 import { v4 } from "uuid";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/authContetxt";
+import { FaCamera } from "react-icons/fa";
+
 export default function () {
   // setting states
   let [isEdit, setIsEdit] = useState(false);
@@ -55,14 +57,6 @@ export default function () {
     setPosts(updatedCaptionPost);
   };
 
-  // const { authed, logout } = useAuth();
-  // const navigate = useNavigate();
-
-  // const handleLogout = () => {
-  //   logout();
-  //   navigate("/");
-  // };
-
   // web cam feature
   const WebcamComponent = () => <Webcam />;
   const videoConstraints = {
@@ -106,64 +100,25 @@ export default function () {
                 />
               </div>
               <div className="form-group">
-                {/* web cam */}
+                <span>Capture</span>{" "}
+                <button className="btn ">
+                  {" "}
+                  <FaCamera />
+                </button>
+              </div>
 
-                {/* {picture == "" ? (
-                  <Webcam
-                    audio={false}
-                    height={400}
-                    ref={webcamRef}
-                    width={400}
-                    screenshotFormat="image/jpeg"
-                    videoConstraints={videoConstraints}
-                  />
-                ) : (
-                  <img src={picture} />
-                )} */}
-              </div>
-              <div>
-                {picture != "" ? (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPicture();
-                    }}
-                    className="btn btn-primary"
-                  >
-                    Retake
-                  </button>
-                ) : (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      capture();
-                    }}
-                    className="btn btn-danger"
-                  >
-                    Capture
-                  </button>
-                )}
-              </div>
               <div className="form-group border">
                 <button className="btn btn-c btn-lng" onClick={createPost}>
                   <FaCheckSquare /> post
                 </button>
               </div>
-
-              {/* <p>{f}</p> */}
             </div>
           </div>
           <div className="col-lg-4 col-md-6 col-sm-12">
             <div className="main border">
               <div className="container-fluid">
                 <div className="row text-right bg-primary">
-                  <div className="col-lg-2">
-                    {/* {authed && (
-                      <button className="btn" onClick={handleLogout}>
-                        logout
-                      </button>
-                    )} */}
-                  </div>
+                  <div className="col-lg-2"></div>
                 </div>
               </div>
               {posts.map((post) => {

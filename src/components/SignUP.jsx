@@ -3,8 +3,10 @@ import { Link, Navigate } from "react-router-dom";
 import React from "react";
 import { useFormik } from "formik";
 import { useAuth } from "../context/authContetxt";
-
 import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const schema = Yup.object().shape({
   fullname: Yup.string()
@@ -34,21 +36,28 @@ export default function Signup() {
       password: "",
       email: "",
     },
+
     validationSchema: schema,
-    onSubmit: (values) => {
+
+    onSubmit: (values, { resetForm }) => {
       // alert(JSON.stringify(values, null, 2));
       localStorage.setItem("fullname", values.fullname);
       localStorage.setItem("username", values.username);
       localStorage.setItem("password", values.password);
       localStorage.setItem("email", values.email);
       localStorage.setItem("isRegistered", true);
-
-      console.log(values);
+      resetForm();
+      successNotify();
     },
   });
   if (loggedIn === true) {
     return <Navigate to="/home" replace={true}></Navigate>;
   }
+  const successNotify = () =>
+    toast.success("Sign Up SuccessFully!", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+
   return (
     <div className="Container p-2">
       <div className="row m-5">
@@ -66,7 +75,7 @@ export default function Signup() {
                   type="text"
                   className="form-control"
                   placeholder="Full Name"
-                  value={values.fufullname}
+                  value={values.fullname}
                   onChange={handleChange}
                 />
                 {errors.fullname && touched.fullname ? (
@@ -83,8 +92,8 @@ export default function Signup() {
                   value={values.email}
                   onChange={handleChange}
                 />
-                {errors.fullname && touched.fullname ? (
-                  <div>{errors.fullName}</div>
+                {errors.email && touched.email ? (
+                  <div>{errors.email}</div>
                 ) : null}
               </div>
               <div className="mb-3 mt-4">
@@ -121,15 +130,16 @@ export default function Signup() {
                   className="form-control"
                   style={{ backgroundColor: "#4CB5F9", color: "#fff" }}
                 >
-                  SignIn
+                  SignUp
                 </button>
               </div>
+              <ToastContainer />
             </form>
             {/* )} */}
           </div>
           <div className=" border px-5 py-2 my-2">
             <p>
-              Already have an account? <Link to="/">SignUp</Link>
+              Already have an account? <Link to="/">Login</Link>
             </p>
           </div>
         </div>
