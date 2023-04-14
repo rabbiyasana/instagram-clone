@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaCheckSquare } from "react-icons/fa";
 import { useFormik } from "formik";
 export default function (props) {
   let [isEdit, setIsEdit] = useState(false);
@@ -32,8 +32,8 @@ export default function (props) {
                 value={values.caption}
                 onChange={handleChange}
               />
-              <button className="btn btn-primary" onClick={handleSubmit}>
-                update
+              <button className="btn" onClick={handleSubmit}>
+                <FaCheckSquare />
               </button>
             </>
           ) : (
@@ -44,7 +44,7 @@ export default function (props) {
         <div className="card-footer">
           <div className="row">
             <div className="col-3">
-              <span>This is a {props.post_type}</span>
+              {/* <span>This is a {props.post_type}</span> */}
               <button
                 className="btn btn-c btn-lng"
                 onClick={() => {
